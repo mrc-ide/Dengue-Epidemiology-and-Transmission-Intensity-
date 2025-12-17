@@ -12,8 +12,7 @@
 # See README.md                                                                           #
 ###########################################################################################
 
-
-**Load packages**
+#Load packages
 library(writexl)
 library(readxl)
 library(tidyverse)
@@ -77,11 +76,11 @@ DR <- calculate_delay(DR, "DATE RECOVERY", "DATE HOSPITALISATION", "HDR")       
 
 
 # Filter values between 0 to 20
-delay1 <- subset(delay, OSSC >= 0 & OSSC <= 20)
-delay2 <- subset(delay, OSR >= 0 & OSR <= 20)
-delay3 <- subset(delay, OSDH >= 0 & OSDH <= 20)
-delay4 <- subset(delay, OSDR >= 0 & OSDR <= 20)
-delay5 <- subset(delay, HDR >= 0 & HDR <= 20)
+delay1 <- subset(DR, OSSC >= 0 & OSSC <= 20)
+delay2 <- subset(DR, OSR >= 0 & OSR <= 20)
+delay3 <- subset(DR, OSDH >= 0 & OSDH <= 20)
+delay4 <- subset(DR, OSDR >= 0 & OSDR <= 20)
+delay5 <- subset(DR HDR >= 0 & HDR <= 20)
 
 
 

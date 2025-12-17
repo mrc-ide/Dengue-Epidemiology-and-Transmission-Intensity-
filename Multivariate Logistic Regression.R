@@ -3,6 +3,11 @@
 #Multivariate logistic regression models for dengue: incidence, hospitalisation, and fatality 
 # Panama, 2000–2024
 
+# Cite as:                                                                                
+# Quijada M et al, Dengue Epidemiology and Transmission Intensity across Panama           
+# during 2000-2024                                                                        
+# Pre-print available at: https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5461361%20  
+
 # Outputs:
 #  - Adjusted IRR for reported incidence (Poisson with offset)
 #  - Adjusted RR for hospitalisation among cases

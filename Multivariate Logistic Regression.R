@@ -34,13 +34,38 @@ Hospitalised <- readRDS("path/to/Hospitalised.rds") #Hospitalised Cases
 
 
 #IRR for reported incidence
+
+#Cases
+# Convert wide age-band columns into long format
+# Each age-band becomes a category under "Age-group"
+# The corresponding case counts are placed in the "Cases" column
+
+Cases <- Cases %>%
+  pivot_longer(cols = c(`0-9`, `10-19`, `20-29`, `30-39`, `40-49`, `50-59`, `60-69`, `70-79`, `over80`), 
+               names_to = "Age-group", values_to = "Cases")
+
 # Aggregate to Year x Age-group x Sex
 CasesT <- Cases %>%
   group_by(Age-group, Year, Sex) %>%
   dplyr::summarize(Cases = sum(Cases, na.rm = TRUE))
 
+
+#Population
+# Convert wide age-band columns into long format
+# Each age-band becomes a category under "Age-group"
+# The corresponding case counts are placed in the "Cases" column
+
+Pop <- Pop %>%
+  pivot_longer(cols = c(`0-9`, `10-19`, `20-29`, `30-39`, `40-49`, `50-59`, `60-69`, `70-79`, `over80`), 
+               names_to = "Age-group", values_to = "Pop")
+
+PopT <- Pop %>%
+  group_by(Age, Year, Sex) %>%
+  dplyr::summarize(Popt = sum(Pop, na.rm = TRUE))
+
+
 #Merge Cases and Population 
-Incage <- left_join(CasesT, Pop, by = c("Year", "Age", "Sex")) 
+Incage <- left_join(CasesT, PopT, by = c("Year", "Age", "Sex")) 
 
 #multivariate Logistic Regression 
 IncidenceModel <- glm(Cases ~ Age-group + Sex + offset(log(Popt)),
@@ -109,7 +134,7 @@ DeadRR <- left_join(CasesT, DeadT, by = c("Sex", "Year", "Age-group"))
 
 #multivariate Logistic Regression 
 modelFatality<- glm(cbind(Dead, Cases - Dead) ~ Age-group + Sex,
-                      family = binomial(link = "logit"),
+                      family = binomial(link = "log"),
                       data = DeadRR)
 
 #Credible intervals 

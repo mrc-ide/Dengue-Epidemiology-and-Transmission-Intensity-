@@ -1,6 +1,11 @@
 #----- Code to simulate & fit dengue constant-in-time FOI (District) catalytic model
 # Produces the analyses and code used for the paper (Dengue Epidemiology and Transmission Intensity 
-# across Panama during 2000-2024)
+# across Panama during 2000-2024).
+
+# Cite as:                                                                                
+# Quijada M et al, Dengue Epidemiology and Transmission Intensity across Panama           
+# during 2000-2024                                                                        
+# Pre-print available at: https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5461361%20  
 
 #Data format expected (wide): Region, District, Age-group, Sex, 2000,2001,...,2024
 #Model: district-level constant FOI (lambda), reporting prob rho and gamma region-level.

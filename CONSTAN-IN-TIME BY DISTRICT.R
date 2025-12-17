@@ -27,7 +27,7 @@ library(purrr)
 
 #Data-Read the .rds object
 temp <- readRDS("path/to/DengueCases.rds") #Dengue Cases by Region and District
-pop_mat <- readRDS("path/to/PopDistrict2000-24.rds") #Population by Region and District
+pop_mat <- readRDS("path/to/PopDistrict2000_24.rds") #Population by Region and District
 
 
 ##DENGUE INTENSITY
@@ -43,8 +43,8 @@ Region <- unique(temp$Region)
                 nL = length(Location), 
                 nR = length(Region),
                 max_age = 109,
-                cases = as.matrix(temp[, -c(1:2)]), # int matrix (district x age groups)
-                pop = as.matrix(pop_mat[, -c(1:2)]),  # numeric matrix (district x age groups)
+                cases = as.matrix(temp[, -c(1:4)]), # int matrix (district x age groups)
+                pop = as.matrix(pop_mat[, -c(1:4)]),  # numeric matrix (district x age groups)
                 age=age,
                 ageLims=rbind(amin,amax), # 2 x nA integer matrix of age bounds
                 region = as.integer(factor(temp$REGION))) #Region

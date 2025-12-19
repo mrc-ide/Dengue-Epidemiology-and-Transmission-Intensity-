@@ -47,7 +47,7 @@ Region <- unique(temp$Region)
                 pop = as.matrix(pop_mat[, -c(1:4)]),  # numeric matrix (district x age groups)
                 age=age,
                 ageLims=rbind(amin,amax), # 2 x nA integer matrix of age bounds
-                region = as.integer(factor(temp$REGION))) #Region
+                region = as.integer(factor(temp$Region))) #Region
   
   #Compile and fit the model
   check_cmdstan_toolchain(fix=T)

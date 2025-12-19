@@ -14,8 +14,7 @@
 #  - Adjusted RR for case fatality among cases
 
 
-
-#Libraries 
+# Load Required Libraries
 library(dplyr)
 library(ggplot2)
 library("glm2")

@@ -27,27 +27,88 @@ library(readr)
 library(purrr)
 
 #Read data 
-temp <- readRDS("path/to/DengueCases.rds") #Dengue Cases by Region 
-pop_mat <- readRDS("path/to/PopRegion2000_24.rds") #Population by Region 
+Cases <- readRDS("path/to/DengueCases.rds") #Dengue Cases by Region 
+Pop <- readRDS("path/to/PopRegion2000_24.rds") #Population by Region 
+
+
+#Cases
+# Convert wide Year columns into long format
+# Each Year becomes a category under "Year"
+# The corresponding case counts are placed in the "Cases" column
+Casescolumn <- Cases %>%
+  pivot_longer(cols = matches("^\\d{4}$"),   # new column with the Year
+               names_to = "Year", values_to = "Cases",  # new column with the case counts
+               names_transform = list(Year = as.integer))  # <-- ensures Year is integer
+
+# Aggregate to Year x Age-group x Region
+Casescolumn <- Casescolumn %>%
+  group_by(`Age-group`, Year, Region) %>%
+  summarise(Cases = sum(Cases),.groups = 'drop')
+
+
+# Average cases across years for each Region × Age-group
+#    (Mean over all years after the aggregation above)
+CasesT <- Casescolumn  %>%
+  group_by(`Age-group`, Region) %>%
+  dplyr::summarize(Cases = mean(Cases, na.rm = TRUE))
+
+
+# Reshape to wide format:
+  #Each Age-group becomes its own column
+temp <- CasesT %>%
+  pivot_wider(names_from = `Age-group`,
+              values_from = Cases)
+
+# Remove NOT region categories
+temp <- temp %>%
+  filter(!Region %in% c("DESCONOCI", "IMPORTADO", "EXTRANJERO", "SIN DEFINIR"))
+temp[is.na(temp)] <- 0 #Replace any remaining NA value
+
+
+
+#Population
+#    Reshape population data from wide (age columns) to long
+#    Each age group becomes a row instead of a column
+Pop24 <- Pop %>%
+  pivot_longer(cols = c("0-9", "10-19", "20-29", "30-39", "40-49", "50-59", "60-69", "70-79", "over80"),
+               names_to = "Age-group", values_to = "Pop")
+
+#Aggregate population by Year × Age-group × Region
+Pop24 <- Pop24 %>%
+  group_by(`Age-group`, Year, Region) %>%
+  summarise(Pop = sum(Pop)) %>%
+  ungroup()
+
+#Compute mean population across years for each Region × Age-group
+Popmean <- Pop24 %>%
+  group_by(`Age-group`, Region) %>%
+  summarise(Pop = as.integer(mean(Pop)),.groups = 'drop')
+
+# Convert long population table into wide format
+pop_mat <- Popmean %>%
+  pivot_wider(names_from = `Age-group`,
+              values_from = Pop) %>%
+  ungroup
 
 
 ##DENGUE INTENSITY
 #Model Setting
 age <- 0:108
-amin <- c(1,seq(11,81,10))
-amax <- c(seq(10,80,10), 109)
+amin <- c(1,seq(11,81,10)) #Age minimum
+amax <- c(seq(10,80,10), 109) #Age maximum
 Location <- unique(temp$Region)
+
 
 # Prepare Stan data list
   data <- list( nA= 9, # Age structure (9 groups)
                nL = length(Location), 
                max_age = 109,
-               cases = as.matrix(temp[, -4]),   # int matrix (regions x age groups)
-               pop = as.matrix(pop_mat[, -4]),   # numeric matrix (regions x age groups)
+               cases = as.matrix(temp[, -1]),   # int matrix (regions x age groups)
+               pop = as.matrix(pop_mat[, -1]),   # numeric matrix (regions x age groups)
                age=age,
                ageLims=rbind(amin,amax)) # 2 x nA integer matrix of age bounds
   
-  
+
   #Compile and fit the model
   check_cmdstan_toolchain(fix=T)
   set_cmdstan_path("/Users/marioquijada/.cmdstan/cmdstan-2.33.1")

@@ -106,7 +106,7 @@ rateHS <- left_join(Hosp, PopT, by = c("Sex", "Year", "Age-group")) %>%
 
 #multivariate Regression 
 IncidenceHS <- glm(Hosp ~ 'Age-group' + Sex + as.factor(Year) + offset(log(Popt)),
-family = poisson (link = "log"), #1og incidence rate ratios (IRR)
+family = poisson (link = "log"), #1og hospitalisation rate ratios
 data =rateHS)
 
 IncHS <- tidy(IncidenceHS, exponentiate = TRUE, conf.int = TRUE) %>%
@@ -137,27 +137,19 @@ DeadT <- Deadcolumn %>%
 
 
 # Merge both databases Pop and Dead.
-FRR <- left_join(DeadT, PopT, by = c("Sex", "Year", "Age-group"))
+FRR <- left_join(DeadT, PopT, by = c("Sex", "Year", "Age-group")) %>%
+mutate(Dead = replace_na(Dead, 0))
 
 #multivariate Regression 
 IncidenceF <- glm(Dead ~ 'Age-group' + Sex + as.factor(Year) + offset(log(Popt)),
-family = poisson (link = "log"), #1og incidence rate ratios (IRR)
+family = poisson (link = "log"), #1og fatality rate ratios 
 data =FRR)
-
-IncHS <- tidy(IncidenceHS, exponentiate = TRUE, conf.int = TRUE) %>%
-dplyr:: mutate(dplyr:: across (where (is.numeric), ~ round (.x, 2)))
-
-
-
-modelFatality<- glm(cbind(Dead, Cases - Dead) ~ `Age-group` + Sex,
-                      family = binomial(link = "log"),
-                      data = DeadRR)
 
 #Credible intervals 
 modelFatality <- tidy(modelFatality, conf.int = TRUE) %>%
 mutate(across(where(is.numeric), round, 2))
 
 # Save results
-write_xlsx(modelCfr_b, "~/path/to/your_file.xlsx")
+write_xlsx(modelFatality, "~/path/to/your_file.xlsx")
 
 

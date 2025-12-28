@@ -24,9 +24,9 @@ library(loo)
 library(readr)       
 library(purrr)
 
-#Data-Read the .rds object
-Cases <- readRDS("path/to/DengueCases.rds") #Dengue Cases by Region and District
-Pop <- readRDS("path/to/PopDistrict2000_24.rds") #Population by Region and District
+#Data-Read from excel
+Cases <- readRDS("path/to/DengueCases.xlsx") #Dengue Cases by Region and District
+Pop <- readRDS("path/to/PopDistrict2000_24.xlsx") #Population by Region and District
 
 #Cases
 # Convert wide Year columns into long format

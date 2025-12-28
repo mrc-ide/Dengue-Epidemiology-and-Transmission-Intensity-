@@ -26,9 +26,9 @@ library(loo)
 library(readr)       
 library(purrr)
 
-#Read data 
-Cases <- readRDS("path/to/DengueCases.rds") #Dengue Cases by Region 
-Pop <- readRDS("path/to/PopRegion2000_24.rds") #Population by Region 
+#Read data from excel
+Cases <- readRDS("path/to/DengueCases.xlsx") #Dengue Cases by Region 
+Pop <- readRDS("path/to/PopRegion2000_24.xlsx") #Population by Region 
 
 
 #Cases

@@ -16,6 +16,7 @@
 
 # Load Required Libraries
 library(dplyr)
+library(tidyr)
 library(ggplot2)
 library("glm2")
 library("broom")
@@ -99,26 +100,18 @@ Hosp <- Hospitalisedcolumn %>%
   summarise(Hosp = n(), .groups = "drop")
 
 
-#Merge Hospitalised and Cases
-rateHS <- left_join(CasesT, Hosp, by = c("Sex", "Year", "Age-group")) 
+#Merge Hospitalised and Population
+rateHS <- left_join(Hosp, PopT, by = c("Sex", "Year", "Age-group"))
 
+IncidenceHS <- glm(Hosp ~ 'Age-group' + Sex + as.factor(Year) + offset(log(Popt)),
+family = poisson (link = "log"), #1og incidence rate ratios (IRR)
+data =rateHS)
 
-# Ensure no negative failures and valid counts
-rateHS <- rateHS %>%
-  filter(!is.na(Hosp), !is.na(Cases), Cases > 0, Hosp >= 0, Hosp <= Cases)
-
-
-#multivariate Logistic Regression 
-model_Hosp <- glm(cbind(Hosp, Cases - Hosp) ~ Sex + `Age-group`,
-                  family = binomial(link = "log"),
-                  data = rateHS)
-
-#Credible intervals 
-model_Hosp <- tidy(model_Hosp, exponentiate = TRUE, conf.int = TRUE) %>%
-mutate(across(where(is.numeric), round, 2))
+IncHS <- tidy(IncidenceHS, exponentiate = TRUE, conf.int = TRUE) %>%
+dplyr:: mutate(dplyr:: across (where (is.numeric), ~ round (.x, 2)))
 
 # Save results
-write_xlsx(model_Hosp, "~/path/to/your_file.xlsx")
+write_xlsx(IncHS, "~/path/to/your_file.xlsx")
 
 
 
@@ -141,11 +134,19 @@ DeadT <- Deadcolumn %>%
   mutate(Year = as.numeric(Year))
 
 
-# Merge both databases Cases and Dead.
-DeadRR <- left_join(CasesT, DeadT, by = c("Sex", "Year", "Age-group")) 
-
+# Merge both databases Pop and Dead.
+FRR <- left_join(DeadT, PopT, by = c("Sex", "Year", "Age-group"))
 
 #multivariate Logistic Regression 
+IncidenceF <- glm(Dead ~ 'Age-group' + Sex + as.factor(Year) + offset(log(Popt)),
+family = poisson (link = "log"), #1og incidence rate ratios (IRR)
+data =FRR)
+
+IncHS <- tidy(IncidenceHS, exponentiate = TRUE, conf.int = TRUE) %>%
+dplyr:: mutate(dplyr:: across (where (is.numeric), ~ round (.x, 2)))
+
+
+
 modelFatality<- glm(cbind(Dead, Cases - Dead) ~ `Age-group` + Sex,
                       family = binomial(link = "log"),
                       data = DeadRR)

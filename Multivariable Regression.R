@@ -68,7 +68,7 @@ PopT <- Pop %>%
 #Merge Cases and Population 
 Incage <- left_join(CasesT, PopT,by = c("Year", "Age-group", "Sex"))
 
-#multivariate Logistic Regression 
+##multivariate Regression 
 IncidenceModel <- glm(Cases ~ `Age-group` + Sex + offset(log(Popt)),
                       family = poisson (link = "log"), #log incidence rate ratios (IRR)
                       data =Incage)
@@ -104,9 +104,7 @@ Hosp <- Hospitalisedcolumn %>%
 rateHS <- left_join(Hosp, PopT, by = c("Sex", "Year", "Age-group")) %>%
   mutate(Hosp = replace_na(Hosp, 0))
 
-
-
-
+#multivariate Regression 
 IncidenceHS <- glm(Hosp ~ 'Age-group' + Sex + as.factor(Year) + offset(log(Popt)),
 family = poisson (link = "log"), #1og incidence rate ratios (IRR)
 data =rateHS)
@@ -141,7 +139,7 @@ DeadT <- Deadcolumn %>%
 # Merge both databases Pop and Dead.
 FRR <- left_join(DeadT, PopT, by = c("Sex", "Year", "Age-group"))
 
-#multivariate Logistic Regression 
+#multivariate Regression 
 IncidenceF <- glm(Dead ~ 'Age-group' + Sex + as.factor(Year) + offset(log(Popt)),
 family = poisson (link = "log"), #1og incidence rate ratios (IRR)
 data =FRR)

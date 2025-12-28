@@ -26,7 +26,7 @@ library(writexl)
 theme_set(theme_classic())
 
 
-# Read data (RDS)
+# Read data (Excel)
 Cases <- readRDS("path/to/DengueCases.xlsx") #Dengue Cases by Region and District
 Pop <- readRDS("path/to/PopRegion2000_24.xlsx") #Population by Region and District
 Dead  <- readRDS("path/to/DengueCases.xlsx", sheet = "Dead") #Cases Fatality

@@ -29,7 +29,7 @@ library(lubridate)
 
 # Add data base
 # Replace your path here; using "path/to/..." as a placeholder.
-# Read the dataset from an RDS file.
+# Read the dataset from an excel file.
 DR <- readRDS("path/to/LineList_2000_24.xlsx") #Delay report
 
 # Convert Date Strings to Date Objects

@@ -101,7 +101,11 @@ Hosp <- Hospitalisedcolumn %>%
 
 
 #Merge Hospitalised and Population
-rateHS <- left_join(Hosp, PopT, by = c("Sex", "Year", "Age-group"))
+rateHS <- left_join(Hosp, PopT, by = c("Sex", "Year", "Age-group")) %>%
+  mutate(Hosp = replace_na(Hosp, 0))
+
+
+
 
 IncidenceHS <- glm(Hosp ~ 'Age-group' + Sex + as.factor(Year) + offset(log(Popt)),
 family = poisson (link = "log"), #1og incidence rate ratios (IRR)

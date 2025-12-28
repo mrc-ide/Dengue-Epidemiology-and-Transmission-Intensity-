@@ -27,10 +27,10 @@ theme_set(theme_classic())
 
 
 # Read data (RDS)
-Cases <- readRDS("path/to/DengueCases.rds") #Dengue Cases by Region and District
-Pop <- readRDS("path/to/PopRegion2000_24.rds") #Population by Region and District
-Dead  <- readRDS("path/to/Dead.rds") #Cases Fatality
-Hospitalised <- readRDS("path/to/Hospitalised.rds") #Hospitalised Cases
+Cases <- readRDS("path/to/DengueCases.xlsx") #Dengue Cases by Region and District
+Pop <- readRDS("path/to/PopRegion2000_24.xlsx") #Population by Region and District
+Dead  <- readRDS("path/to/DengueCases.xlsx", sheet = "Dead") #Cases Fatality
+Hospitalised <- readRDS("path/to/DengueCases.xlsx", sheet = "Hospitalised") #Hospitalised Cases
 
 
 #IRR for reported incidence

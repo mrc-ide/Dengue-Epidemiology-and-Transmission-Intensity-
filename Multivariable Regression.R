@@ -146,7 +146,7 @@ family = poisson (link = "log"), #1og fatality rate ratios
 data =FRR)
 
 #Credible intervals 
-modelFatality <- tidy(modelFatality, conf.int = TRUE) %>%
+modelFatality <- tidy(IncidenceF, conf.int = TRUE) %>%
 mutate(across(where(is.numeric), round, 2))
 
 # Save results

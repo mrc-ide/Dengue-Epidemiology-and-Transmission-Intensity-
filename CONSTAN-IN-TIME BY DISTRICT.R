@@ -25,8 +25,8 @@ library(readr)
 library(purrr)
 
 #Data-Read from excel
-Cases <- readRDS("path/to/DengueCases.xlsx") #Dengue Cases by Region and District
-Pop <- readRDS("path/to/PopDistrict2000_24.xlsx") #Population by Region and District
+Cases <- read_excel("path/to/DengueCases.xlsx") #Dengue Cases by Region and District
+Pop <- read_excel("path/to/PopDistrict2000_24.xlsx") #Population by Region and District
 
 #Cases
 # Convert wide Year columns into long format

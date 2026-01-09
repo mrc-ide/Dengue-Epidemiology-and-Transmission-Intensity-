@@ -23,6 +23,7 @@ library("broom")
 library(stats)
 library(Hmisc)
 library(writexl)
+library(readxl)  
 theme_set(theme_classic())
 
 
@@ -69,7 +70,7 @@ PopT <- Pop %>%
 Incage <- left_join(CasesT, PopT,by = c("Year", "Age-group", "Sex"))
 
 ##multivariate Regression 
-IncidenceModel <- glm(Cases ~ `Age-group` + Sex + offset(log(Popt)),
+IncidenceModel <- glm(Cases ~ `Age-group` + Sex + as.factor(Year) + offset(log(Popt)),
                       family = poisson (link = "log"), #log incidence rate ratios (IRR)
                       data =Incage)
 
